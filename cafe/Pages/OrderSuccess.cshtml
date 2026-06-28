@@ -1,0 +1,61 @@
+@page
+@model cafe.Pages.OrderSuccessModel
+@{
+    ViewData["Title"] = "Sipariş Başarılı - Endles Cafe";
+}
+
+<div class="container my-5">
+    <div class="cart-container text-center py-5" style="max-width: 700px; margin: 0 auto;">
+        <div class="mb-4" style="font-size: 5rem; color: var(--success);">
+            <i class="bi bi-check-circle"></i>
+        </div>
+        
+        <h1 style="font-family: var(--font-heading);" class="display-6">Siparişiniz Başarıyla Alındı!</h1>
+        <p class="text-muted mt-2 mb-5">Kahveniz ve tatlılarınız en kısa sürede hazırlanmaya başlanacaktır.</p>
+
+        @if (Model.Order != null)
+        {
+            <div class="text-start mb-5 p-4" style="background-color: var(--bg-tertiary); border-radius: 12px; border: 1px solid var(--bg-tertiary);">
+                <h3 style="font-family: var(--font-heading); font-size: 1.3rem; border-bottom: 1px solid var(--bg-secondary); padding-bottom: 0.5rem;" class="mb-3">Sipariş Özeti</h3>
+                
+                <div class="row g-2 mb-3" style="font-size: 0.95rem; color: var(--text-secondary);">
+                    <div class="col-sm-4 fw-bold">Sipariş No:</div>
+                    <div class="col-sm-8 text-white">#@Model.Order.Id</div>
+                    
+                    <div class="col-sm-4 fw-bold">Sipariş Tarihi:</div>
+                    <div class="col-sm-8 text-white">@Model.Order.OrderDate.ToString("dd.MM.yyyy HH:mm")</div>
+                    
+                    <div class="col-sm-4 fw-bold">Müşteri Adı:</div>
+                    <div class="col-sm-8 text-white">@Model.Order.CustomerName</div>
+                    
+                    <div class="col-sm-4 fw-bold">Telefon:</div>
+                    <div class="col-sm-8 text-white">@Model.Order.CustomerPhone</div>
+                    
+                    <div class="col-sm-4 fw-bold">Ödeme Yöntemi:</div>
+                    <div class="col-sm-8 text-white">Kredi Kartı (Online Ödeme)</div>
+                </div>
+
+                <h4 style="font-family: var(--font-heading); font-size: 1.15rem;" class="mb-3 mt-4">Sipariş Edilen Ürünler</h4>
+                <div class="border-top border-secondary">
+                    @foreach (var item in Model.Order.OrderItems)
+                    {
+                        <div class="d-flex justify-content-between align-items-center py-2" style="font-size: 0.95rem; border-bottom: 1px solid var(--bg-secondary);">
+                            <span class="text-white">@item.Product?.Name <span class="text-muted">x @item.Quantity</span></span>
+                            <span class="fw-bold" style="color: var(--accent);">₺@((item.UnitPrice * item.Quantity).ToString("F2"))</span>
+                        </div>
+                    }
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-3 pt-2" style="font-size: 1.2rem; font-weight: 700;">
+                    <span>Toplam Ödenen</span>
+                    <span style="color: var(--accent); font-size: 1.4rem;">₺@Model.Order.TotalAmount.ToString("F2")</span>
+                </div>
+            </div>
+        }
+
+        <div class="d-flex justify-content-center gap-3">
+            <a asp-page="/Menu" class="btn btn-accent px-4 py-2">Yeni Sipariş Ver</a>
+            <a asp-page="/Index" class="btn btn-outline-accent px-4 py-2">Ana Sayfaya Dön</a>
+        </div>
+    </div>
+</div>

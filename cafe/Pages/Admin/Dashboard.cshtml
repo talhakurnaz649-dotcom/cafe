@@ -1,0 +1,124 @@
+@page
+@model cafe.Pages.Admin.DashboardModel
+@{
+    ViewData["Title"] = "Admin Paneli - Endles Cafe";
+}
+
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-5 border-bottom border-secondary pb-3">
+        <h1 style="font-family: var(--font-heading);" class="mb-0"><i class="bi bi-speedometer2 me-2" style="color: var(--accent);"></i> Yönetim Paneli</h1>
+        <div class="d-flex gap-2">
+            <a asp-page="/Admin/Products/Index" class="btn btn-outline-accent btn-sm py-2 px-3"><i class="bi bi-box-seam me-1"></i> Ürünleri Yönet</a>
+            <a asp-page="/Admin/Orders" class="btn btn-accent btn-sm py-2 px-3"><i class="bi bi-receipt me-1"></i> Siparişleri Gör</a>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="admin-card-summary">
+                <span class="text-muted text-uppercase" style="font-size: 0.8rem; font-weight: 700;">Toplam Sipariş</span>
+                <div class="admin-card-number">@Model.TotalOrders</div>
+                <span style="font-size: 0.9rem; color: var(--text-secondary);">Gelen tüm siparişler</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="admin-card-summary">
+                <span class="text-muted text-uppercase" style="font-size: 0.8rem; font-weight: 700;">Bekleyen Sipariş</span>
+                <div class="admin-card-number text-warning">@Model.PendingOrders</div>
+                <span style="font-size: 0.9rem; color: var(--text-secondary);">Hazırlanması gerekenler</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="admin-card-summary">
+                <span class="text-muted text-uppercase" style="font-size: 0.8rem; font-weight: 700;">Tamamlanan</span>
+                <div class="admin-card-number text-success">@Model.CompletedOrders</div>
+                <span style="font-size: 0.9rem; color: var(--text-secondary);">Teslim edilen siparişler</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="admin-card-summary">
+                <span class="text-muted text-uppercase" style="font-size: 0.8rem; font-weight: 700;">Toplam Gelir</span>
+                <div class="admin-card-number" style="color: var(--accent);">₺@Model.TotalRevenue.ToString("F0")</div>
+                <span style="font-size: 0.9rem; color: var(--text-secondary);">Kazanılan toplam ciro</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Orders & Stats Quick View -->
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div style="background-color: var(--bg-secondary); border: 1px solid var(--bg-tertiary); border-radius: 16px; padding: 2rem;">
+                <h2 style="font-family: var(--font-heading); font-size: 1.5rem;" class="mb-4"><i class="bi bi-clock-history me-2 text-warning"></i> Son Gelen 5 Sipariş</h2>
+                
+                @if (!Model.RecentOrders.Any())
+                {
+                    <p class="text-muted text-center py-4 mb-0">Henüz hiç sipariş bulunmuyor.</p>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover admin-table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Müşteri</th>
+                                    <th>Tarih</th>
+                                    <th>Tutar</th>
+                                    <th>Durum</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var order in Model.RecentOrders)
+                                {
+                                    <tr>
+                                        <td>#@order.Id</td>
+                                        <td>
+                                            <div class="fw-bold">@order.CustomerName</div>
+                                            <div class="text-muted" style="font-size: 0.8rem;">@order.CustomerPhone</div>
+                                        </td>
+                                        <td>@order.OrderDate.ToString("dd.MM.yyyy HH:mm")</td>
+                                        <td class="fw-bold text-accent" style="color: var(--accent);">Public ₺@order.TotalAmount.ToString("F2")</td>
+                                        <td>
+                                            @if (order.IsCompleted)
+                                            {
+                                                <span class="badge-status badge-completed">Tamamlandı</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge-status badge-pending">Bekliyor</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div style="background-color: var(--bg-secondary); border: 1px solid var(--bg-tertiary); border-radius: 16px; padding: 2rem; height: 100%;">
+                <h2 style="font-family: var(--font-heading); font-size: 1.5rem;" class="mb-4"><i class="bi bi-activity me-2" style="color: var(--accent);"></i> Hızlı Durum</h2>
+                
+                <div class="d-flex justify-content-between align-items-center py-3 border-bottom border-secondary">
+                    <span class="text-muted">Kayıtlı Aktif Ürün:</span>
+                    <span class="fw-bold">@Model.TotalProducts Adet</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center py-3 border-bottom border-secondary">
+                    <span class="text-muted">Bekleyen İşler:</span>
+                    <span class="badge badge-warning text-dark fw-bold bg-warning px-3 py-2 rounded">@Model.PendingOrders Hazırlanacak</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center py-3 mb-4">
+                    <span class="text-muted">Sunucu Durumu:</span>
+                    <span class="text-success fw-bold"><i class="bi bi-circle-fill me-1" style="font-size: 0.75rem;"></i> Çevrimiçi</span>
+                </div>
+                
+                <a asp-page="/Admin/Products/Create" class="btn btn-accent w-100 py-3 d-flex align-items-center justify-content-center gap-2">
+                    <i class="bi bi-plus-circle" style="font-size: 1.2rem;"></i> Yeni Ürün Ekle
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

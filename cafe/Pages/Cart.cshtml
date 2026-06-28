@@ -1,0 +1,216 @@
+@page
+@model cafe.Pages.CartModel
+@{
+    ViewData["Title"] = "Ödeme ve Sepetim - Endles Cafe";
+}
+
+<div class="container my-5">
+    <div class="cart-container">
+        <div class="cart-header">
+            <h1 style="font-family: var(--font-heading);" class="mb-0"><i class="bi bi-cart3 me-2" style="color: var(--accent);"></i> Alışveriş Sepetim</h1>
+        </div>
+
+        @if (!Model.CartItems.Any())
+        {
+            <div class="text-center py-5">
+                <i class="bi bi-cart-x text-muted" style="font-size: 4rem;"></i>
+                <p class="text-muted mt-3 mb-4" style="font-size: 1.2rem;">Sepetinizde ürün bulunmamaktadır.</p>
+                <a asp-page="/Menu" class="btn btn-accent px-4 py-2">Menüye Göz At</a>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <!-- Cart Items List -->
+                <div class="col-lg-7">
+                    @foreach (var item in Model.CartItems)
+                    {
+                        <div class="cart-item-row">
+                            <div class="cart-item-info">
+                                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                {
+                                    <img src="@item.ImageUrl" alt="@item.ProductName" class="cart-item-img" />
+                                }
+                                else
+                                {
+                                    <div class="cart-item-img d-flex align-items-center justify-content-center bg-dark text-muted" style="font-size: 2rem;">
+                                        ☕
+                                    </div>
+                                }
+                                <div>
+                                    <h3 class="cart-item-name">@item.ProductName</h3>
+                                    <div class="cart-item-price">₺@item.Price.ToString("F2")</div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center gap-4">
+                                <!-- Quantity Controls -->
+                                <form method="post" asp-page-handler="UpdateQuantity" style="margin: 0;">
+                                    <input type="hidden" name="productId" value="@item.ProductId" />
+                                    <div class="quantity-controls">
+                                        <button type="submit" name="action" value="decrease" class="quantity-btn">-</button>
+                                        <span class="quantity-value">@item.Quantity</span>
+                                        <button type="submit" name="action" value="increase" class="quantity-btn">+</button>
+                                    </div>
+                                </form>
+
+                                <!-- Item Total -->
+                                <div style="font-weight: 700; font-size: 1.15rem; width: 80px; text-align: right;">
+                                    ₺@item.TotalPrice.ToString("F2")
+                                </div>
+
+                                <!-- Remove button -->
+                                <form method="post" asp-page-handler="RemoveItem" style="margin: 0;">
+                                    <input type="hidden" name="productId" value="@item.ProductId" />
+                                    <button type="submit" class="btn-remove" title="Sepetten Kaldır">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="cart-total-section">
+                        <span class="cart-total-label">Toplam Tutar</span>
+                        <span class="cart-total-price">₺@Model.TotalAmount.ToString("F2")</span>
+                    </div>
+                </div>
+
+                <!-- Payment Form -->
+                <div class="col-lg-5 mt-4 mt-lg-0">
+                    <div style="background-color: var(--bg-tertiary); border: 1px solid var(--bg-tertiary); border-radius: 20px; padding: 2rem; box-shadow: var(--shadow-md);">
+                        <h2 style="font-family: var(--font-heading); font-size: 1.6rem; color: var(--accent);" class="mb-4 text-center border-bottom border-secondary pb-3">
+                            <i class="bi bi-credit-card me-2"></i> Ödeme ve Sipariş
+                        </h2>
+
+                        <form method="post" asp-page-handler="Checkout">
+                            <div asp-validation-summary="ModelOnly" class="text-danger mb-3" style="font-size: 0.9rem;"></div>
+
+                            <!-- Customer Information Group -->
+                            <h4 style="font-size: 1.05rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;" class="mb-3 text-muted">1. İletişim Bilgileri</h4>
+                            
+                            <div class="form-custom-group">
+                                <label class="form-custom-label" asp-for="CustomerOrder.CustomerName">Ad Soyad</label>
+                                <input asp-for="CustomerOrder.CustomerName" class="form-custom-control" placeholder="Adınız ve Soyadınız" required />
+                                <span asp-validation-for="CustomerOrder.CustomerName" class="text-danger" style="font-size: 0.85rem;"></span>
+                            </div>
+
+                            <div class="form-custom-group mb-4">
+                                <label class="form-custom-label" asp-for="CustomerOrder.CustomerPhone">Telefon Numarası</label>
+                                <input asp-for="CustomerOrder.CustomerPhone" id="phoneInput" class="form-custom-control" placeholder="05xx xxx xx xx" required maxlength="14" />
+                                <span asp-validation-for="CustomerOrder.CustomerPhone" class="text-danger" style="font-size: 0.85rem;"></span>
+                            </div>
+
+                            <!-- Payment Information Group -->
+                            <h4 style="font-size: 1.05rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;" class="mb-3 text-muted border-top border-secondary pt-3">2. Kartla Ödeme</h4>
+
+                            <div class="form-custom-group">
+                                <label class="form-custom-label" asp-for="CardName">Kart Üzerindeki İsim</label>
+                                <input asp-for="CardName" class="form-custom-control" placeholder="KART SAHİBİ ADI SOYADI" required style="text-transform: uppercase;" />
+                                <span asp-validation-for="CardName" class="text-danger" style="font-size: 0.85rem;"></span>
+                            </div>
+
+                            <div class="form-custom-group">
+                                <label class="form-custom-label" asp-for="CardNumber">Kart Numarası</label>
+                                <input asp-for="CardNumber" id="cardNumberInput" class="form-custom-control" placeholder="0000 0000 0000 0000" required maxlength="19" />
+                                <span asp-validation-for="CardNumber" class="text-danger" style="font-size: 0.85rem;"></span>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-custom-group">
+                                        <label class="form-custom-label" asp-for="CardExpiration">Son Kullanma (AA/YY)</label>
+                                        <input asp-for="CardExpiration" id="cardExpInput" class="form-custom-control" placeholder="AA/YY" required maxlength="5" />
+                                        <span asp-validation-for="CardExpiration" class="text-danger" style="font-size: 0.85rem;"></span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-custom-group">
+                                        <label class="form-custom-label" asp-for="CardCVV">CVV / CVC</label>
+                                        <input asp-for="CardCVV" id="cardCvvInput" class="form-custom-control" placeholder="000" required maxlength="3" />
+                                        <span asp-validation-for="CardCVV" class="text-danger" style="font-size: 0.85rem;"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-accent w-100 py-3 mt-4 d-flex align-items-center justify-content-center gap-2" style="font-size: 1.1rem;">
+                                <i class="bi bi-credit-card-2-front" style="font-size: 1.3rem;"></i> ₺@Model.TotalAmount.ToString("F2") Öde ve Sipariş Ver
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Phone formatting
+            const phoneInput = document.getElementById('phoneInput');
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function (e) {
+                    let num = e.target.value.replace(/\D/g, '');
+                    if (num.length > 0 && !num.startsWith('0')) {
+                        num = '0' + num;
+                    }
+                    if (num.length > 1 && num[1] !== '5') {
+                        num = '05' + num.substring(1);
+                    }
+                    num = num.substring(0, 11);
+                    
+                    let formatted = '';
+                    if (num.length > 0) {
+                        formatted += num.substring(0, 4); // 05xx
+                    }
+                    if (num.length > 4) {
+                        formatted += ' ' + num.substring(4, 7); // xxx
+                    }
+                    if (num.length > 7) {
+                        formatted += ' ' + num.substring(7, 9); // xx
+                    }
+                    if (num.length > 9) {
+                        formatted += ' ' + num.substring(9, 11); // xx
+                    }
+                    e.target.value = formatted;
+                });
+            }
+
+            // Card number formatting
+            const cardInput = document.getElementById('cardNumberInput');
+            if (cardInput) {
+                cardInput.addEventListener('input', function (e) {
+                    let val = e.target.value.replace(/\D/g, '');
+                    val = val.substring(0, 16);
+                    let formatted = val.replace(/(\d{4})/g, '$1 ').trim();
+                    e.target.value = formatted;
+                });
+            }
+
+            // Expiration Date formatting
+            const expInput = document.getElementById('cardExpInput');
+            if (expInput) {
+                expInput.addEventListener('input', function (e) {
+                    let val = e.target.value.replace(/\D/g, '');
+                    val = val.substring(0, 4);
+                    if (val.length > 2) {
+                        val = val.substring(0, 2) + '/' + val.substring(2);
+                    }
+                    e.target.value = val;
+                });
+            }
+
+            // CVV restriction
+            const cvvInput = document.getElementById('cardCvvInput');
+            if (cvvInput) {
+                cvvInput.addEventListener('input', function (e) {
+                    let val = e.target.value.replace(/\D/g, '');
+                    e.target.value = val.substring(0, 3);
+                });
+            }
+        });
+    </script>
+}

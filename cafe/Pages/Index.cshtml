@@ -1,0 +1,87 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Ana Sayfa - Endles Cafe";
+}
+
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="container">
+        <h1 class="hero-title">Her Yudumda <span>Sonsuz Lezzet</span></h1>
+        <p class="hero-subtitle">
+            Özenle seçilmiş kahve çekirdeklerimiz ve günlük hazırlanan enfes tatlılarımızla Endles Cafe kapılarını sizin için aralıyor. Hayatın ritmini yavaşlatın ve taze kahve kokusunun keyfini çıkarın.
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+            <a asp-page="/Menu" class="btn btn-accent btn-lg px-4 py-2">Menüyü Keşfet <i class="bi bi-arrow-right"></i></a>
+            <a asp-page="/Cart" class="btn btn-outline-accent btn-lg px-4 py-2">Sipariş Ver</a>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h2 class="display-5" style="font-family: var(--font-heading);">Endles Cafe Deneyimi</h2>
+        <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">Neden bizi tercih etmelisiniz? İşte kahvemizi ve mekanımızı özel kılan özelliklerimiz.</p>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+        <!-- Feature 1 -->
+        <div class="col-md-4">
+            <div class="cafe-card text-center p-4">
+                <div class="mb-3" style="font-size: 3rem; color: var(--accent);">
+                    <i class="bi bi-cup-hot"></i>
+                </div>
+                <h3 class="h4" style="font-family: var(--font-heading);">Nitelikli Çekirdekler</h3>
+                <p class="text-muted" style="font-size: 0.95rem;">
+                    Dünyanın en iyi kahve çiftliklerinden toplanan, %100 Arabica nitelikli çekirdekleri özenle kavuruyor ve taze taze öğüterek demliyoruz.
+                </p>
+            </div>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="col-md-4">
+            <div class="cafe-card text-center p-4">
+                <div class="mb-3" style="font-size: 3rem; color: var(--accent);">
+                    <i class="bi bi-cake"></i>
+                </div>
+                <h3 class="h4" style="font-family: var(--font-heading);">Günlük Tatlılar</h3>
+                <p class="text-muted" style="font-size: 0.95rem;">
+                    Şeflerimizin her sabah taptaze malzemelerle hazırladığı, çıtır çıtır ve hafif aromalı tatlılarımızla kahve keyfinizi ikiye katlayın.
+                </p>
+            </div>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="col-md-4">
+            <div class="cafe-card text-center p-4">
+                <div class="mb-3" style="font-size: 3rem; color: var(--accent);">
+                    <i class="bi bi-award"></i>
+                </div>
+                <h3 class="h4" style="font-family: var(--font-heading);">Sıcak Atmosfer</h3>
+                <p class="text-muted" style="font-size: 0.95rem;">
+                    Çalışırken, kitap okurken ya da sevdiklerinizle sohbet ederken kendinizi evinizde hissettirecek konforlu ve sıcak bir iç mekan tasarımı.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Promo Section -->
+<div class="container my-5 py-4">
+    <div style="background-color: var(--bg-secondary); border: 1px solid var(--bg-tertiary); border-radius: 30px; overflow: hidden; box-shadow: var(--shadow-md);">
+        <div class="row g-0 align-items-center">
+            <div class="col-lg-6">
+                <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?q=80&w=600" class="img-fluid w-100" style="object-fit: cover; height: 400px;" alt="Kahve Demleme">
+            </div>
+            <div class="col-lg-6 p-5">
+                <span style="color: var(--accent); font-weight: 700; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">Günün Tavsiyesi</span>
+                <h2 class="display-6 mt-2 mb-3" style="font-family: var(--font-heading); color: var(--text-primary);">Orijinal San Sebastian & Filtre Kahve</h2>
+                <p style="color: var(--text-secondary); line-height: 1.7;">
+                    Yumuşacık akışkan dokusu ve hafif yanık aromasıyla dillere destan San Sebastian Cheesecake'imizin yanına taze demlenmiş bir filtre kahve ya da americano sipariş edin. Bu mükemmel uyumla gününüze tatlı bir mola verin.
+                </p>
+                <a asp-page="/Menu" class="btn btn-accent mt-3">Hemen Sipariş Et</a>
+            </div>
+        </div>
+    </div>
+</div>

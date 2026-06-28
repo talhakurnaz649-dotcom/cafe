@@ -1,0 +1,119 @@
+@page
+@model cafe.Pages.Admin.Products.IndexModel
+@{
+    ViewData["Title"] = "Ürün Yönetimi - Endles Cafe";
+}
+
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-5 border-bottom border-secondary pb-3">
+        <h1 style="font-family: var(--font-heading);" class="mb-0">
+            <i class="bi bi-box-seam me-2" style="color: var(--accent);"></i> Ürün Yönetimi
+        </h1>
+        <div class="d-flex gap-2">
+            <a asp-page="/Admin/Dashboard" class="btn btn-outline-accent btn-sm py-2 px-3">
+                <i class="bi bg-arrow-left me-1"></i> Panele Dön
+            </a>
+            <a asp-page="/Admin/Products/Create" class="btn btn-accent btn-sm py-2 px-3">
+                <i class="bi bi-plus-circle me-1"></i> Yeni Ürün Ekle
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show text-center mb-4" role="alert" 
+             style="background-color: rgba(109, 142, 100, 0.2); border-color: var(--success); color: var(--text-primary); border-radius: 12px;">
+            <i class="bi bi-check-circle-fill me-2" style="color: var(--success);"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Kapat"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-warning alert-dismissible fade show text-center mb-4" role="alert" 
+             style="background-color: rgba(201, 155, 100, 0.2); border-color: var(--accent); color: var(--text-primary); border-radius: 12px;">
+            <i class="bi bi-exclamation-triangle-fill me-2" style="color: var(--accent);"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Kapat"></button>
+        </div>
+    }
+
+    @if (!Model.Products.Any())
+    {
+        <div class="cart-container text-center py-5">
+            <i class="bi bi-box-seam-fill text-muted" style="font-size: 4rem;"></i>
+            <p class="text-muted mt-3 mb-4" style="font-size: 1.2rem;">Sistemde kayıtlı ürün bulunamadı.</p>
+            <a asp-page="/Admin/Products/Create" class="btn btn-accent px-4 py-2">İlk Ürünü Ekle</a>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-dark table-hover admin-table">
+                <thead>
+                    <tr>
+                        <th>Görsel</th>
+                        <th>Ürün Adı</th>
+                        <th>Kategori</th>
+                        <th>Fiyat</th>
+                        <th>Durum</th>
+                        <th class="text-end">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var product in Model.Products)
+                    {
+                        <tr>
+                            <td>
+                                @if (!string.IsNullOrEmpty(product.ImageUrl))
+                                {
+                                    <img src="@product.ImageUrl" alt="@product.Name" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px; border: 1px solid var(--bg-tertiary);" />
+                                }
+                                else
+                                {
+                                    <span>☕</span>
+                                }
+                            </td>
+                            <td class="fw-bold">@product.Name</td>
+                            <td>
+                                <span class="badge rounded-pill bg-secondary px-3 py-2" style="font-size: 0.8rem;">@product.Category</span>
+                            </td>
+                            <td class="fw-bold" style="color: var(--accent);">₺@product.Price.ToString("F2")</td>
+                            <td>
+                                @if (product.IsActive)
+                                {
+                                    <span class="badge-status badge-completed">Aktif</span>
+                                }
+                                else
+                                {
+                                    <span class="badge-status badge-pending" style="background-color: rgba(178, 83, 83, 0.15); color: var(--danger);">Pasif</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <div class="d-inline-flex gap-2">
+                                    <!-- Toggle Active Button -->
+                                    <form method="post" asp-page-handler="ToggleActive" asp-route-id="@product.Id" style="margin: 0;">
+                                        <button type="submit" class="btn btn-sm @(product.IsActive ? "btn-outline-warning" : "btn-outline-success")" style="border-radius: 6px; font-weight: 600;">
+                                            @(product.IsActive ? "Pasif Yap" : "Aktif Yap")
+                                        </button>
+                                    </form>
+
+                                    <!-- Edit Button -->
+                                    <a asp-page="/Admin/Products/Edit" asp-route-id="@product.Id" class="btn btn-outline-accent btn-sm" style="border-radius: 6px;">
+                                        Düzenle
+                                    </a>
+
+                                    <!-- Delete Button -->
+                                    <form method="post" asp-page-handler="Delete" asp-route-id="@product.Id" onsubmit="return confirm('Bu ürünü silmek istediğinize emin misiniz?');" style="margin: 0;">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm" style="border-radius: 6px; font-weight: 600;">
+                                            Sil
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

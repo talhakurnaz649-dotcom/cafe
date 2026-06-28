@@ -1,0 +1,146 @@
+@page
+@model cafe.Pages.Admin.OrdersModel
+@{
+    ViewData["Title"] = "Sipariş Yönetimi - Endles Cafe";
+}
+
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-5 border-bottom border-secondary pb-3">
+        <h1 style="font-family: var(--font-heading);" class="mb-0">
+            <i class="bi bi-receipt me-2" style="color: var(--accent);"></i> Sipariş Yönetimi
+        </h1>
+        <a asp-page="/Admin/Dashboard" class="btn btn-outline-accent btn-sm py-2 px-3">
+            <i class="bi bi-arrow-left me-1"></i> Panele Dön
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show text-center mb-4" role="alert" 
+             style="background-color: rgba(109, 142, 100, 0.2); border-color: var(--success); color: var(--text-primary); border-radius: 12px;">
+            <i class="bi bi-check-circle-fill me-2" style="color: var(--success);"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Kapat"></button>
+        </div>
+    }
+
+    @if (!Model.Orders.Any())
+    {
+        <div class="cart-container text-center py-5">
+            <i class="bi bi-receipt-cutoff text-muted" style="font-size: 4rem;"></i>
+            <p class="text-muted mt-3 mb-0" style="font-size: 1.2rem;">Henüz alınmış bir sipariş bulunmuyor.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var order in Model.Orders)
+            {
+                <div class="col-12">
+                    <div style="background-color: var(--bg-secondary); border: 1px solid @(order.IsCompleted ? "var(--bg-tertiary)" : "var(--accent)"); border-radius: 16px; padding: 2rem; box-shadow: var(--shadow-sm);">
+                        
+                        <!-- Order Header Info -->
+                        <div class="row align-items-center mb-4 border-bottom border-secondary pb-3">
+                            <div class="col-md-6">
+                                <h3 style="font-family: var(--font-heading); font-size: 1.4rem;" class="mb-1 text-white">
+                                    Sipariş #@order.Id 
+                                    @if (order.IsCompleted)
+                                    {
+                                        <span class="badge-status badge-completed ms-2" style="font-size: 0.75rem;">Tamamlandı</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge-status badge-pending ms-2" style="font-size: 0.75rem;">Hazırlanıyor</span>
+                                    }
+                                </h3>
+                                <p class="text-muted mb-0" style="font-size: 0.9rem;">
+                                    Tarih: @order.OrderDate.ToString("dd.MM.yyyy HH:mm")
+                                </p>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex justify-content-md-end gap-2">
+                                @if (!order.IsCompleted)
+                                {
+                                    <form method="post" asp-page-handler="MarkCompleted" style="margin:0;">
+                                        <input type="hidden" name="orderId" value="@order.Id" />
+                                        <button type="submit" class="btn btn-accent btn-sm py-2 px-3 d-flex align-items-center gap-1">
+                                            <i class="bi bi-check-circle" style="font-size:1.1rem;"></i> Tamamlandı İşaretle
+                                        </button>
+                                    </form>
+                                }
+                                
+                                <form method="post" asp-page-handler="DeleteOrder" onsubmit="return confirm('Bu siparişi silmek istediğinize emin misiniz?');" style="margin:0;">
+                                    <input type="hidden" name="orderId" value="@order.Id" />
+                                    <button type="submit" class="btn btn-outline-danger btn-sm py-2 px-3 d-flex align-items-center gap-1" style="border-radius: 8px; font-weight:700;">
+                                        <i class="bi bi-trash" style="font-size:1.1rem;"></i> Sil
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Customer Details -->
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <span class="text-muted d-block" style="font-size: 0.8rem; text-transform:uppercase; font-weight:700;">Müşteri Adı</span>
+                                <span class="text-white">@order.CustomerName</span>
+                            </div>
+                            <div class="col-md-4 mt-2 mt-md-0">
+                                <span class="text-muted d-block" style="font-size: 0.8rem; text-transform:uppercase; font-weight:700;">Telefon</span>
+                                <span class="text-white">@order.CustomerPhone</span>
+                            </div>
+                            <div class="col-md-4 mt-2 mt-md-0">
+                                <span class="text-muted d-block" style="font-size: 0.8rem; text-transform:uppercase; font-weight:700;">Adres / Masa</span>
+                                <span class="text-white">@order.CustomerAddress</span>
+                            </div>
+                        </div>
+
+                        <!-- Order Items List -->
+                        <div class="table-responsive">
+                            <table class="table table-dark table-hover admin-table mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Ürün Resmi</th>
+                                        <th>Ürün Adı</th>
+                                        <th>Kategori</th>
+                                        <th>Birim Fiyatı</th>
+                                        <th>Adet</th>
+                                        <th class="text-end">Toplam</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in order.OrderItems)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(item.Product?.ImageUrl))
+                                                {
+                                                    <img src="@item.Product.ImageUrl" alt="@item.Product.Name" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px; border: 1px solid var(--bg-tertiary);" />
+                                                }
+                                                else
+                                                {
+                                                    <span>☕</span>
+                                                }
+                                            </td>
+                                            <td class="fw-bold">@item.Product?.Name</td>
+                                            <td>@item.Product?.Category</td>
+                                            <td>₺@item.UnitPrice.ToString("F2")</td>
+                                            <td>@item.Quantity</td>
+                                            <td class="text-end fw-bold" style="color: var(--accent);">₺@((item.UnitPrice * item.Quantity).ToString("F2"))</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Order Footer Total -->
+                        <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top border-secondary">
+                            <span class="text-muted">Sipariş Genel Toplamı</span>
+                            <span class="fs-4 fw-bold" style="color: var(--accent);">₺@order.TotalAmount.ToString("F2")</span>
+                        </div>
+
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

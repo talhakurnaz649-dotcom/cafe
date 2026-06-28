@@ -1,0 +1,72 @@
+@page
+@model cafe.Pages.Admin.Products.CreateModel
+@{
+    ViewData["Title"] = "Yeni Ürün Ekle - Endles Cafe";
+}
+
+<div class="container my-5">
+    <div class="cart-container" style="max-width: 650px; margin: 0 auto;">
+        <div class="cart-header d-flex justify-content-between align-items-center">
+            <h1 style="font-family: var(--font-heading); font-size: 1.8rem;" class="mb-0">
+                <i class="bi bi-plus-circle me-2" style="color: var(--accent);"></i> Yeni Ürün Ekle
+            </h1>
+            <a asp-page="./Index" class="btn btn-outline-accent btn-sm">Geri Dön</a>
+        </div>
+
+        <form method="post" class="mt-4">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3" style="font-size: 0.9rem;"></div>
+
+            <div class="form-custom-group">
+                <label asp-for="Product.Name" class="form-custom-label">Ürün Adı</label>
+                <input asp-for="Product.Name" class="form-custom-control" placeholder="Örn: Caffe Mocha" />
+                <span asp-validation-for="Product.Name" class="text-danger" style="font-size: 0.85rem;"></span>
+            </div>
+
+            <div class="form-custom-group">
+                <label asp-for="Product.Description" class="form-custom-label">Ürün Açıklaması</label>
+                <textarea asp-for="Product.Description" rows="3" class="form-custom-control" placeholder="Ürün içeriği ve hazırlanışı hakkında kısa bilgi..."></textarea>
+                <span asp-validation-for="Product.Description" class="text-danger" style="font-size: 0.85rem;"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-custom-group">
+                        <label asp-for="Product.Price" class="form-custom-label">Fiyat (₺)</label>
+                        <input asp-for="Product.Price" type="number" step="0.01" class="form-custom-control" placeholder="Örn: 95.00" />
+                        <span asp-validation-for="Product.Price" class="text-danger" style="font-size: 0.85rem;"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-custom-group">
+                        <label asp-for="Product.Category" class="form-custom-label">Kategori</label>
+                        <select asp-for="Product.Category" class="form-custom-control" style="background-color: var(--bg-tertiary);">
+                            <option value="Kahve">🌯 Kahve</option>
+                            <option value="Tatlı">🍰 Tatlı</option>
+                        </select>
+                        <span asp-validation-for="Product.Category" class="text-danger" style="font-size: 0.85rem;"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-custom-group">
+                <label asp-for="Product.ImageUrl" class="form-custom-label">Görsel URL</label>
+                <input asp-for="Product.ImageUrl" class="form-custom-control" placeholder="https://images.unsplash.com/..." />
+                <span asp-validation-for="Product.ImageUrl" class="text-danger" style="font-size: 0.85rem;"></span>
+            </div>
+
+            <div class="form-custom-group d-flex align-items-center gap-2 mt-4 mb-4">
+                <input asp-for="Product.IsActive" type="checkbox" class="form-check-input" id="isActiveCheck" 
+                       style="background-color: var(--bg-tertiary); border-color: var(--bg-tertiary); width: 20px; height: 20px; cursor: pointer;" />
+                <label class="form-check-label text-white" for="isActiveCheck" style="cursor: pointer; font-weight: 500;">Menüde Aktif Olarak Göster</label>
+            </div>
+
+            <button type="submit" class="btn btn-accent w-100 py-3 mt-2">
+                <i class="bi bi-save me-1"></i> Ürünü Kaydet
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
