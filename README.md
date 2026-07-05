@@ -1,4 +1,7 @@
-# Cafe & Restoran Yönetim Sistemi
+﻿# Cafe & Restoran Yönetim Sistemi
+
+![Proje ArayÃ¼zÃ¼](screenshot.jpg)
+
 
 Bu proje, bir kafe veya restoranın menü, sipariş ve masa yönetim süreçlerini dijitalleştirmek amacıyla geliştirilmiş modern bir web uygulamasıdır.
 
