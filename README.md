@@ -1,19 +1,19 @@
-﻿# Cafe & Restoran YÃ¶netim Sistemi
+# Cafe & Restoran Yönetim Sistemi
 
-Bu proje, bir kafe veya restoranÄ±n menÃ¼, sipariÅŸ ve masa yÃ¶netim sÃ¼reÃ§lerini dijitalleÅŸtirmek amacÄ±yla geliÅŸtirilmiÅŸ modern bir web uygulamasÄ±dÄ±r.
+Bu proje, bir kafe veya restoranın menü, sipariş ve masa yönetim süreçlerini dijitalleştirmek amacıyla geliştirilmiş modern bir web uygulamasıdır.
 
-## ğŸš€ KullanÄ±lan Teknolojiler
+## 🚀 Kullanılan Teknolojiler
 * **Framework:** ASP.NET Core Razor Pages (.NET 8/9)
-* **Veri TabanÄ± / ORM:** Entity Framework Core (Code-First YaklaÅŸÄ±mÄ±) & SQL Server
-* **TasarÄ±m:** HTML, CSS, JavaScript, Bootstrap
+* **Veri Tabanı / ORM:** Entity Framework Core (Code-First Yaklaşımı) & SQL Server
+* **Tasarım:** HTML, CSS, JavaScript, Bootstrap
 
-## âœ¨ Ã–zellikler / YapÄ±
-* `Pages/`: UygulamanÄ±n sayfa odaklÄ± arayÃ¼z kodlarÄ± ve iÅŸ mantÄ±ÄŸÄ± (PageModel).
-* `Models/`: VeritabanÄ± tablolarÄ±na karÅŸÄ±lÄ±k gelen veri modelleri.
-* `Data/`: DbContext ve veritabanÄ± baÄŸlantÄ± yapÄ±landÄ±rmalarÄ±.
-* `Migrations/`: VeritabanÄ± ÅŸemasÄ±nÄ±n versiyon kontrol dosyalarÄ±.
+## ✨ Özellikler / Yapı
+* `Pages/`: Uygulamanın sayfa odaklı arayüz kodları ve iş mantığı (PageModel).
+* `Models/`: Veritabanı tablolarına karşılık gelen veri modelleri.
+* `Data/`: DbContext ve veritabanı bağlantı yapılandırmaları.
+* `Migrations/`: Veritabanı şemasının versiyon kontrol dosyaları.
 
-## ğŸ› ï¸ NasÄ±l Ã‡alÄ±ÅŸtÄ±rÄ±lÄ±r?
-1. `appsettings.json` dosyasÄ±ndaki baÄŸlantÄ± dizesini (Connection String) kendi yerel SQL Server ayarlarÄ±nÄ±za gÃ¶re gÃ¼ncelleyin.
-2. Package Manager Console Ã¼zerinde `Update-Database` komutunu Ã§alÄ±ÅŸtÄ±rarak veritabanÄ± ÅŸemasÄ±nÄ± oluÅŸturun.
-3. Projeyi Visual Studio 2022 veya `dotnet run` komutu ile ayaÄŸa kaldÄ±rÄ±n.
+## 🛠️ Nasıl Çalıştırılır?
+1. `appsettings.json` dosyasındaki bağlantı dizesini (Connection String) kendi yerel SQL Server ayarlarınıza göre güncelleyin.
+2. Package Manager Console üzerinde `Update-Database` komutunu çalıştırarak veritabanı şemasını oluşturun.
+3. Projeyi Visual Studio 2022 veya `dotnet run` komutu ile ayağa kaldırın.
